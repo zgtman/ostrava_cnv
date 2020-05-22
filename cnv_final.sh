@@ -24,7 +24,7 @@ awk -v name=$name 'function divn(n, i, fn) {
     printf "%s", $1 > fn
     for(i=2; i<=NF; i++)
        if (i != n)
-          printf "%s%s", OFS, ($i ~ /[^0-9]/ ? $n "/" $i : ($i==0 ? "NA" : $n/$i)) > fn
+          printf "%s%s", OFS, ($i ~ /[^0-9]/ ? $n "/" $i : ($i==0 ? "NA" : sprintf("%.3f", $n/$i) )) > fn
     print "" > fn
 }
 BEGIN {
