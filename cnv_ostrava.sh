@@ -20,25 +20,25 @@ awk 'BEGIN{print "region"}NR>1{print $1}' $region | tr "," "\t" | awk '{print $1
 paste region_tmp.tsv *max_cov.tsv > all_samples_max_cov.tsv
 
 
-awk '
-{
-   gsub(/\r/,"")
-}
-{OFS="\t"}{
-  nf=NF
-  close(out_file)
-  for(k=2;k<=nf;k++){
-    out_file=""
-    for(i=2;i<=nf;i++){
-      if($i!=0){
-         $(NF+1)=sprintf("%.03f",$k/$i)
-      }
-      else{
-         $(NF+1)=sprintf("%s","NaN")
-      }
-    }
-    out_file=k"field_out_file.tsv"
-    print >> (out_file)
-    NF=nf
-  }
-}' all_samples_max_cov.tsv
+# awk '
+# {
+#    gsub(/\r/,"")
+# }
+# {OFS="\t"}{
+#   nf=NF
+#   close(out_file)
+#   for(k=2;k<=nf;k++){
+#     out_file=""
+#     for(i=2;i<=nf;i++){
+#       if($i!=0){
+#          $(NF+1)=sprintf("%.03f",$k/$i)
+#       }
+#       else{
+#          $(NF+1)=sprintf("%s","NaN")
+#       }
+#     }
+#     out_file=k"field_out_file.txt"
+#     print >> (out_file)
+#     NF=nf
+#   }
+# }' all_samples_max_cov.tsv
