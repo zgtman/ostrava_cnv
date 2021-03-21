@@ -1,5 +1,11 @@
 #!/bin/bash
 
+mkdir -p ~/Desktop/REPEAT_SANGER
+
+cd ~/Desktop/REPEAT_SANGER
+
+function preprocess() {
+
 for i in *repeat_sanger.xls; 
 
 do
@@ -35,6 +41,9 @@ BEGIN {
       divn(i)
 }' all_samples_max_cov.tsv
 
+}
+
+function format() {
 
 for i in *.temp;
 
@@ -48,3 +57,16 @@ mv "$i" "$name"_final.tsv
 
 done
 
+for i in *_final.tsv; do paste $i ${i%_final.tsv}_max_cov.tsv | awk '{OFS="\t"}{ print $1,$NF, substr($0, index($0,$3)) }' > ${i%_final.tsv}_FINAL.tsv; done
+
+rm -f *max_cov.tsv *final.tsv region_tmp.tsv
+
+mkdir -p CNV_RESULTS
+
+mv *_FINAL.tsv CNV_RESULTS/
+
+}
+
+########
+preprocess
+format
