@@ -59,11 +59,12 @@ done
 
 for i in *_final.tsv; do paste $i ${i%_final.tsv}_max_cov.tsv | awk '{OFS="\t"}{ print $1,$NF, substr($0, index($0,$3)) }' > ${i%_final.tsv}_FINAL.tsv; done
 
-rm -f *max_cov.tsv *final.tsv region_tmp.tsv
 
 mkdir -p CNV_RESULTS
 
-mv *_FINAL.tsv CNV_RESULTS/
+mv all_samples_max_cov.tsv *_FINAL.tsv CNV_RESULTS/
+
+rm -f *final.tsv region_tmp.tsv *_max_cov.tsv
 
 }
 
