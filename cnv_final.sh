@@ -4,6 +4,8 @@ mkdir -p ~/Desktop/REPEAT_SANGER
 
 cd ~/Desktop/REPEAT_SANGER
 
+if [ -d CNV_RESULTS ]; then rm -Rf CNV_RESULTS; fi
+
 function preprocess() {
 
 for i in *repeat_sanger.xls; 
@@ -57,8 +59,7 @@ mv "$i" "$name"_final.tsv
 
 done
 
-for i in *_final.tsv; do paste $i ${i%_final.tsv}_max_cov.tsv | awk '{OFS="\t"}{ print $1,$NF, substr($0, index($0,$3)) }' > ${i%_final.tsv}_FINAL.tsv; done
-
+for i in *_final.tsv; do paste ${i%_final.tsv}_max_cov.tsv $i | awk '{OFS="\t"}{t = $1; $1 = $2; $2 = t; print;}' > ${i%_final.tsv}_FINAL.tsv; done
 
 mkdir -p CNV_RESULTS
 
