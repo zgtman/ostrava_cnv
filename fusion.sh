@@ -3,7 +3,7 @@
 # FN OSTRAVA
 # CREATED BY PETR BROŽ, Bioxsys s.r.o.
 
-exec &>> rna_fuze.log
+# exec &>> rna_fuze.log  #UNCOMMENT
 
 T="$(date +%s)"
 
@@ -221,9 +221,9 @@ function plot_arriba() {
 
 function star_fusion_all() {
 
-    source /home/finalistdx/anaconda3/bin/activate star-fusion_env
+    echo "INFO: Starting fusion ALGORITHM2"
 
-    echo "INFO: Starting new star fusion analysis"
+    source /home/finalistdx/anaconda3/bin/activate star-fusion_env
 
     # Loop through trimmed fastq files
     for sample_id in $(find . -maxdepth 1 \( -type f -o -type l \) -name "*trim*.fastq.gz" | while read F; do
@@ -242,7 +242,7 @@ function star_fusion_all() {
                     --tmpdir tmp \
                     --examine_coding_effect \
                     --output_dir "${sample_id}_out_star_fusion" &> /dev/null; then
-        echo "STAR-Fusion completed first step for sample: $sample_id"
+        echo "ALGORITHM2 completed first step for sample: $sample_id"
 
         # Run second part of STAR-Fusion (assuming Chimeric.out.junction exists in current directory)
         STAR-Fusion --genome_lib_dir "$resource_lib" \
@@ -252,19 +252,19 @@ function star_fusion_all() {
         mv "${sample_id}_out_star_fusion"/star-fusion.fusion_predictions.abridged.tsv "${sample_id}_star_fusion.tsv"
 
         if [ $? -eq 0 ]; then
-        echo "STAR-Fusion completed for sample: $sample_id"
+        echo "ALGORITHM2 completed for sample: $sample_id"
 
         else
-        echo "Error running second part of STAR-Fusion for sample: $sample_id"
+        echo "Error running second part of ALGORITHM2 for sample: $sample_id"
         fi
     else
-        echo "Error running first part of STAR-Fusion for sample: $sample_id"
+        echo "Error running first part of ALGORITHM2 for sample: $sample_id"
     fi
 
     done
 
-    echo "STAR-Fusion analysis completed for all samples."
-    conda deactivate
+    echo "ALGORITHM2 analysis completed for all samples."
+    source /home/finalistdx/anaconda3/bin/activate deactivate
 
     for i in *_star_fusion.tsv;
 
@@ -276,11 +276,11 @@ function star_fusion_all() {
 
     file=$(ls -1 *_star_fusion.tsv | awk 'NR==1{print $0}')
 
-    head -1 $file | awk '{OFS="\t"}{print "NAME",$0}' | tr -d "#" | cat - tmp_result.xls > final_star_fusions.xls
+    head -1 $file | awk '{OFS="\t"}{print "NAME",$0}' | tr -d "#" | cat - tmp_result.xls > final_fusions_alg2.xls
 
     rm -f tmp_result.xls
 
-    touch FINISH_ALGORITMUS_2.TXT
+    touch FINISH_ALGORITHM_2.TXT
 
 }
 
@@ -290,7 +290,7 @@ function fusioncatcher_all() {
     source /home/finalistdx/anaconda3/bin/activate fusioncatcher_env
 
     for i in $(find . -maxdepth 1  \( -type f -o -type l \) -name "*trim*.fastq.gz" | while read F; do basename $F | rev | cut -c 22- | rev ; done | sort | uniq); do
-    echo "INFO: Processing FUSIONCATCHER sample: $i"
+    echo "INFO: Processing ALGORITHM 3 sample: $i"
 
     fusioncatcher -d $fusioncatcher_db \
     -i "${i}"_L001_R1_001.fastq.gz,"${i}"_L001_R2_001.fastq.gz \
@@ -299,13 +299,13 @@ function fusioncatcher_all() {
     --skip-fastqtk \
     -p $cpu_total
 
-    mv "${i}_fusion_catcher"/final-list_candidate-fusion-genes.txt "${i}_fusion_catcher.tsv"
+    mv "${i}_fusion_catcher"/final-list_candidate-fusion-genes.txt "${i}_fusion_alg3.tsv"
 
     done
 
     conda deactivate
 
-    touch FINISH_ALGORITMUS_3.TXT
+    touch FINISH_ALGORITHM_3.TXT
 
 }
 
